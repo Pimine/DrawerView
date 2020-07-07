@@ -308,6 +308,17 @@ private struct ChildScrollViewInfo {
             }
         }
     }
+    
+    public var embeddedView: UIView? {
+        willSet {
+            self.embeddedView?.removeFromSuperview()
+        }
+        didSet {
+            if let embeddedView = embeddedView {
+                self.embed(view: embeddedView)
+            }
+        }
+    }
 
     /// Attaches the drawer to the given view. The drawer will update its constraints
     /// to match the bounds of the target view.
@@ -430,8 +441,6 @@ private struct ChildScrollViewInfo {
 
     private var lastWarningDate: Date?
 
-    private let embeddedView: UIView?
-
     private var hiddenChildViews: [UIView]?
 
     private var needsRespositioning = false
@@ -473,20 +482,7 @@ private struct ChildScrollViewInfo {
     /// constrained with auto layout from all of its sides.
     convenience public init(withView view: UIView) {
         self.init(embeddedView: view)
-
-        view.frame = self.bounds
-        view.backgroundColor = .clear
-        view.translatesAutoresizingMaskIntoConstraints = false
-        self.addSubview(view)
-
-        for c in [
-            view.leadingAnchor.constraint(equalTo: self.leadingAnchor),
-            view.trailingAnchor.constraint(equalTo: self.trailingAnchor),
-            view.heightAnchor.constraint(equalTo: self.heightAnchor),
-            view.topAnchor.constraint(equalTo: self.topAnchor)
-        ] {
-            c.isActive = true
-        }
+        embed(view: view)
     }
 
     func embed(view: UIView) {
