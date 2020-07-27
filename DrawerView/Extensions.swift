@@ -11,12 +11,14 @@ import UIKit
 
 public extension UIViewController {
 
-    func addDrawerView(withViewController viewController: UIViewController, parentView: UIView? = nil) -> DrawerView {
+    func addDrawerView(withViewController viewController: UIViewController) -> DrawerView {
         #if swift(>=4.2)
         self.addChild(viewController)
         #else
         self.addChildViewController(viewController)
         #endif
+        viewController.didMove(toParent: self)
+        
         let drawer = DrawerView(withView: viewController.view)
         drawer.attachTo(view: self.view)
         return drawer
