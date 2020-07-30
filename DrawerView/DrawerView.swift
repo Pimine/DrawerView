@@ -1202,7 +1202,9 @@ private struct ChildScrollViewInfo {
             self.overlay?.alpha = opacityFactor * overlayOpacity
             self.shouldRemoveOverlay = false
         } else {
-            self.overlay?.alpha = 0
+            UIView.animate(withDuration: 0.25) {
+                self.overlay?.alpha = 0
+            }
             self.shouldRemoveOverlay = true
         }
     }
